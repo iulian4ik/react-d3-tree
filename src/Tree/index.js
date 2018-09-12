@@ -90,8 +90,9 @@ export default class Tree extends React.Component {
    * @return {void}
    */
   setInitialTreeDepth(nodeSet, initialDepth) {
+    const { collapsedDataProp } = this.props;
     nodeSet.forEach(n => {
-      n._collapsed = n.depth >= initialDepth;
+      n._collapsed = n.depth >= initialDepth && n[collapsedDataProp];
     });
   }
 
@@ -145,9 +146,13 @@ export default class Tree extends React.Component {
    * @return {array} `data` array with internal properties added
    */
   assignInternalProperties(data) {
+    const { collapsedDataProp } = this.props;
     return data.map(node => {
-      node.id = uuid.v4();
-      node._collapsed = false;
+      node.id = node.id || uuid.v4();
+
+      // add user defined check for the collapsed property
+      node._collapsed = node._collapsed || !!node[collapsedDataProp];
+
       // if there are children, recursively assign properties to them too
       if (node.children && node.children.length > 0) {
         node.children = this.assignInternalProperties(node.children);
@@ -500,6 +505,7 @@ Tree.defaultProps = {
   shouldCollapseNeighborNodes: false,
   circleRadius: undefined, // TODO: DEPRECATE
   styles: {},
+  collapsedDataProp: undefined,
 };
 
 Tree.propTypes = {
@@ -548,4 +554,5 @@ Tree.propTypes = {
     nodes: PropTypes.object,
     links: PropTypes.object,
   }),
+  collapsedDataProp: PropTypes.string,
 };
