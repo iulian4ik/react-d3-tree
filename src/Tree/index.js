@@ -268,7 +268,7 @@ export default class Tree extends React.Component {
     const matches = this.findNodesById(nodeId, data, []);
     const targetNode = matches[0];
 
-    if (this.props.collapsible && !this.state.isTransitioning) {
+    if (this.props.collapsible && !this.state.isTransitioning && !targetNode.isLocked) {
       if (targetNode._collapsed) {
         this.expandNode(targetNode);
         this.props.shouldCollapseNeighborNodes && this.collapseNeighborNodes(targetNode, data);
