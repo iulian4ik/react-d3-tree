@@ -33,6 +33,7 @@ export default class Tree extends React.Component {
     this.handleOnClickCb = this.handleOnClickCb.bind(this);
     this.handleOnMouseOverCb = this.handleOnMouseOverCb.bind(this);
     this.handleOnMouseOutCb = this.handleOnMouseOutCb.bind(this);
+    this.updateNodeData = this.updateNodeData.bind(this);
   }
 
   componentWillMount() {
@@ -253,6 +254,24 @@ export default class Tree extends React.Component {
   }
 
   /**
+   * updateNodeData - Finds and updates a given node with user
+   * defined values.
+   *
+   * @param {string} nodeId A node object's `id` field.
+   * @param {string} prop A node object's prop name.
+   * @param {any} value A value to be set to the `prop` field.
+   *
+   * @returns {Tree} The tree instance. Useful for chaining
+   * function calls.
+   */
+  updateNodeData(nodeId, prop, value) {
+    const matches = this.findNodesById(nodeId, this.state.data, []);
+    const targetNode = matches[0];
+    targetNode[prop] = value;
+    return this;
+  }
+
+  /**
    * handleNodeToggle - Finds the node matching `nodeId` and
    * expands/collapses it, depending on the current state of
    * its `_collapsed` property.
@@ -264,7 +283,7 @@ export default class Tree extends React.Component {
    * @return {void}
    */
   handleNodeToggle(nodeId, evt) {
-    const data = clone(this.state.data);
+    const { data } = this.state;
     const matches = this.findNodesById(nodeId, data, []);
     const targetNode = matches[0];
 
